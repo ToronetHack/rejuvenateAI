@@ -22,7 +22,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import { useSyncContentHeight } from 'near-social-bridge';
 import { useEffect, useState } from 'react';
 //@ts-ignore
 import DatePicker from 'react-datepicker';
@@ -73,8 +72,6 @@ const data: Nutritionist[] = [
 
 const sectionTimes = [30, 45, 60, 90, 120];
 export default function NutritionistPage() {
-  // Update the VM iframe's hight container
-  useSyncContentHeight();
 
   const toast = useToast({
     duration: 3000,
