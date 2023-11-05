@@ -88,6 +88,11 @@ const config: HardhatUserConfig = {
       chainId: 1337,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    arbitrumGoerli: {
+      url: "https://goerli-rollup.arbitrum.io/rpc",
+      chainId:421613,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
     aurora: {
       url: "https://testnet.aurora.dev",
       chainId: 1313161555,

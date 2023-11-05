@@ -559,26 +559,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hyperlane-xyz/core@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@hyperlane-xyz/core@npm:1.4.2"
-  dependencies:
-    "@hyperlane-xyz/utils": 1.4.2
-    "@openzeppelin/contracts": ^4.8.0
-    "@openzeppelin/contracts-upgradeable": ^4.8.0
-  checksum: 2c85c752cdaae1603a7f5a6879dbd9477aee6c7a480f91d1649056fa13d14e4a6830dcc488ee398b8c0575cd752f7d6d6701805cd4d978e22425b282eac03431
-  languageName: node
-  linkType: hard
-
-"@hyperlane-xyz/utils@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@hyperlane-xyz/utils@npm:1.4.2"
-  dependencies:
-    ethers: ^5.7.2
-  checksum: e91d2684856d803824beba912d4d65e21009f6e402571adcc7dd0f0b8f43b11eaa8448f1b11958ffa76178f48794017d4d466bdf909dd9d3698b9eee45df9116
-  languageName: node
-  linkType: hard
-
 "@jridgewell/resolve-uri@npm:^3.0.3":
   version: 3.1.1
   resolution: "@jridgewell/resolve-uri@npm:3.1.1"
@@ -1056,24 +1036,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts-upgradeable@npm:^4.8.0":
-  version: 4.9.3
-  resolution: "@openzeppelin/contracts-upgradeable@npm:4.9.3"
-  checksum: bda0240b1d44c913ec5a4e109c622f216c2bbd7b468d210822f75782a5f7fe0609d08bf03b78b253333625e99e507cf2f75212f1de3b274bd9fc64ae967aeec3
-  languageName: node
-  linkType: hard
-
 "@openzeppelin/contracts-v0.7@npm:@openzeppelin/contracts@v3.4.2":
   version: 3.4.2
   resolution: "@openzeppelin/contracts@npm:3.4.2"
   checksum: 0c90f029fe50a49643588e4c8670dae3bbf31795133a6ddce9bdcbc258486332700bb732287baabf7bf807f39182fe8ea2ffa19aa5caf359b1b9c0f083280748
-  languageName: node
-  linkType: hard
-
-"@openzeppelin/contracts@npm:^4.8.0":
-  version: 4.9.3
-  resolution: "@openzeppelin/contracts@npm:4.9.3"
-  checksum: 4932063e733b35fa7669b9fe2053f69b062366c5c208b0c6cfa1ac451712100c78acff98120c3a4b88d94154c802be05d160d71f37e7d74cadbe150964458838
   languageName: node
   linkType: hard
 
@@ -6155,7 +6121,6 @@ __metadata:
     "@chainlink/contracts": ^0.7.1
     "@ethersproject/abi": ^5.4.7
     "@ethersproject/providers": ^5.4.7
-    "@hyperlane-xyz/core": ^1.4.2
     "@nomicfoundation/hardhat-chai-matchers": ^1.0.0
     "@nomicfoundation/hardhat-network-helpers": ^1.0.0
     "@nomicfoundation/hardhat-toolbox": ^2.0.0

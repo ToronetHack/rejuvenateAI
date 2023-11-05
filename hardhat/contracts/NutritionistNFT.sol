@@ -27,8 +27,7 @@ contract NutritionistNFT is INutritionistNFT, SBT {
     ) SBT(name, symbol) {
         owner = _owner;
     }
-0x40e9d632ead25ef40ec258cf82b5fafeba54dc517516d4bba270d04d0f9f7fde usernft
-0xc5231ccfbe735c859ae0ed73fbea8ca1f461eb85c204aee0a47d586719a876d1 nutrinft
+
     // FUNCTIONS
     function mint(address nutritionist, string memory uri) external override {
         require(msg.sender == owner, "caller not owner");

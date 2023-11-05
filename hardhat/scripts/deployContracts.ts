@@ -9,7 +9,10 @@ import { NutritionistNFT__factory, UserNFT__factory, Treasury__factory, Communit
 const privateKey = process.env.PRIVATE_KEY as string;
 const wallet = new Wallet(privateKey);
 
-const auroraRpc = "https://testnet.aurora.dev"
+const arbitrumRpc = "https://goerli-rollup.arbitrum.io/rpc"
+const registryAddr = "0x37D9dC70bfcd8BC77Ec2858836B923c560E891D1"
+const registrarAddr = "0x1433C1BDfCF1b2E1CE843Ede6FcC5d6e409fE56E"
+const linkAddr = "0xd14838A68E8AFBAdE5efb411d5871ea0011AFd28"
 
 async function main() {
     //await deployCommunityContracts();
@@ -50,18 +53,18 @@ async function deployNutritionistNFT(_communityAddr: any) {
 }
 
 async function setupNFTs() {
-    let userNFTAddr = "0xCA836dA8ED627C21226e3B59a3a4F1942B2D1Cc2"
-    let nutritionistNFTAddr = "0x6e2C11794C29e544AF675e1C0AEcF48Ed299d821"
-    let communityAddr = "0x6083A218DF607c21CdD9677eB247286CA73d146C"
+    let userNFTAddr = "0x6D919b8dC30BEf41b56Aa8b18b2052c9459F8E9A"
+    let nutritionistNFTAddr = "0xA39d26482B5c226Fd02A5f3e159C72ee03d63Fc0"
+    let communityAddr = "0x3a65168B746766066288B83417329a7F901b5569"
 
-    const provider = getDefaultProvider(auroraRpc);
+    const provider = getDefaultProvider(arbitrumRpc);
     const connectedWallet = wallet.connect(provider);
 
     const communityFactory = new Community__factory(connectedWallet);
     const community = communityFactory.attach(communityAddr);
 
     try {
-        console.log("Setting up NFTs for Aurora")
+        console.log("Setting up NFTs for Arbitrum")
         const tx = await community.setNFTs(userNFTAddr, nutritionistNFTAddr);
         await tx.wait();
         console.log("NFTs setup successful")
@@ -76,43 +79,43 @@ async function setupNFTs() {
 
 
 async function deployCommunityContracts() {
-    console.log("Deploying Contracts for Aurora....");
+    console.log("Deploying Contracts for Arbitrum....");
     let treasuryAddr;
     let communityAddr;
     try {
-        console.log("Deploying treasury for Aurora");
+        console.log("Deploying treasury for Arbitrum");
         treasuryAddr = await deployTreasury();
 
         const CommunityFactory: Community__factory = await ethers.getContractFactory("Community"/*, wallet*/);
 
-        console.log("Deploying Community contract for Aurora");
-        const community = await CommunityFactory.deploy(treasuryAddr);
+        console.log("Deploying Community contract for Arbitrum");
+        const community = await CommunityFactory.deploy(treasuryAddr, linkAddr, registrarAddr, registryAddr);
         await community.deployed();
         communityAddr = community.address;
-        console.log("---- Community Contract for Aurora was deployed to aurora testnet at this address: ---- ", community.address);
+        console.log("---- Community Contract for Arbitrum was deployed to Arbitrum testnet at this address: ---- ", community.address);
     }
     catch (error) {
-        console.error("Error deploying Community for Aurora:", error);
+        console.error("Error deploying Community for Arbitrum:", error);
         throw error;
     }
 
-    console.log("Deploying UserNFT for Aurora....");
+    console.log("Deploying UserNFT for Arbitrum....");
     let userNFT;
     try {
         userNFT = await deployUserNFT(communityAddr);
     }
     catch (error) {
-        console.error("Error User NFT for Aurora:", error);
+        console.error("Error User NFT for Arbitrum:", error);
         throw error;
     }
 
-    console.log("Deploying NutritionistNFT for Aurora....");
+    console.log("Deploying NutritionistNFT for Arbitrum....");
     let nutritionistNFT;
     try {
         nutritionistNFT = await deployNutritionistNFT(communityAddr);
     }
     catch (error) {
-        console.error("Error Nutritionist NFT for Aurora:", error);
+        console.error("Error Nutritionist NFT for Arbitrum:", error);
         throw error;
     }
 }

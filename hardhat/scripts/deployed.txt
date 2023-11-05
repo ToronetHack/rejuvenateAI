@@ -1,8 +1,9 @@
-Deploying treasury for Aurora
----- Treasury Contract was deployed to: ----  0xff4c759b5e2D4923Dde13071dc5677A02B6a8EC3
-Deploying Community contract for Aurora
----- Community Contract for Aurora was deployed to aurora testnet at this address: ----  0x6083A218DF607c21CdD9677eB247286CA73d146C
-Deploying UserNFT for Aurora....
----- UserNFT Contract was deployed to: ----  0xCA836dA8ED627C21226e3B59a3a4F1942B2D1Cc2
-Deploying NutritionistNFT for Aurora....
----- NutritionistNFT Contract was deployed to: ----  0x6e2C11794C29e544AF675e1C0AEcF48Ed299d821
+Deploying Contracts for Arbitrum....
+Deploying treasury for Arbitrum
+---- Treasury Contract was deployed to: ----  0x9E1eF5A92C9Bf97460Cd00C0105979153EA45b27
+Deploying Community contract for Arbitrum
+---- Community Contract for Arbitrum was deployed to Arbitrum testnet at this address: ----  0x3a65168B746766066288B83417329a7F901b5569
+Deploying UserNFT for Arbitrum....
+---- UserNFT Contract was deployed to: ----  0x6D919b8dC30BEf41b56Aa8b18b2052c9459F8E9A
+Deploying NutritionistNFT for Arbitrum....
+---- NutritionistNFT Contract was deployed to: ----  0xA39d26482B5c226Fd02A5f3e159C72ee03d63Fc0
