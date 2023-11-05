@@ -7,11 +7,8 @@ import WorkWithUs from '@/components/work-with-us';
 import TalkToNutritionist from '@/components/talk-to-nutritionist';
 import CTA from '@/components/cta';
 import Footer from '@/components/footer';
-import { useSyncContentHeight } from 'near-social-bridge';
 
 const App = () => {
-  // Update the VM iframe's hight container
-  useSyncContentHeight();
 
   return (
     <div className='bg-primaryBeige min-h-screen'>

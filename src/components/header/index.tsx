@@ -2,22 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from '@chakra-ui/next-js';
-import { useAuth } from 'near-social-bridge';
 import RejuvenateAi from '../../images/svg/rejuvenate-logo.svg';
 import { useAppContext } from '@/context/state';
 import RegisterForm from '../register-form';
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const Header = ({ bg = 'transparent' }: { bg?: string }) => {
   const { setAddress } = useAppContext();
-  const [currentGreeting, setCurrentGreeting] = useState('loading...');
-  const [greeting, setGreeting] = useState('Hello welcome');
-  const [status, setStatus] = useState<'ready' | 'pending'>('ready');
-
-  const auth = useAuth();
+  const { address } = useAccount();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   useEffect(() => {
-    setAddress(`${auth.user?.accountId}`);
-  }, [auth.user?.accountId, setAddress]);
+    setAddress(`${address}`);
+  }, [address, setAddress]);
 
   return (
     <section
@@ -29,7 +28,7 @@ const Header = ({ bg = 'transparent' }: { bg?: string }) => {
         </Link>
       </div>
       <>
-        {auth.user ? (
+        {address ? (
           <>
             <label
               className='btn bg-[#014421] h-[48px] px-5 lg:h-[50px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
@@ -43,10 +42,12 @@ const Header = ({ bg = 'transparent' }: { bg?: string }) => {
         ) : (
           <button
             type='submit'
+            onClick={openConnectModal}
             className='btn w-full max-w-[200px] flex items-center justify-center bg-[#014421] h-[48px] px-5 lg:h-[50px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
           >
             Connect Wallet
           </button>
+          //<ConnectKitButton />
         )}
       </>
       <RegisterForm />
