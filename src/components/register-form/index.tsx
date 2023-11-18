@@ -6,9 +6,18 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { uploadPromptToIpfs } from '@/helpers/prompt';
+import { Stack, Tab,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Button, Radio, RadioGroup } from '@chakra-ui/react';
+import { NewUserType } from '../new-user-type';
 //import { useAuth } from "near-social-bridge";
 
-const RegisterForm = () => {
+const RegisterForm = ({isOpen,onClose}:{isOpen:boolean,onClose:()=>void}) => {
   //const auth = useAuth()
   const router = useRouter();
 
@@ -39,19 +48,44 @@ const RegisterForm = () => {
     //    const cid = await uploadPromptToIpfs(data);
     router.push('/member/dashboard');
   };
+  const dietOptions = [
 
+ 'I eat 5 or more servings of vegetables per day',
+ 'I eat two or more servings of fruit per day', 
+ 'I have two or more servings of dairy (or equivalent) per day', 
+ 'My cereals are mostly whole grains',
+ 'I eat fast lean protein every day',
+ 'I eat fast food once per week or less', 
+ 'I eat pastries or cakes once a week or less', 
+ 'I have less than 1 teaspoon of salt per day', 
+ 'I have 2 or less alcoholic drinks on any day', 
+ 'I drink at least 2 litres of water per day', 
+  ];
+  
+  const overallHealthOptions = [
+   'Excellent',
+   'Very good',
+   'Good',
+   'Fair',
+   'Poor'
+  ];
+  const smokingOptions = [
+   'less than 5 cigarettes',
+   '5 to 10 cigarettes',
+   '11 to 20 cigarettes',
+   'above 20 cigarettes'
+  ];
   return (
     <div className='modal'>
-      <label className='modal-overlay' htmlFor='modal-1'></label>
-      <div className='modal-content flex flex-col gap-5 max-w-[90%] lg:max-w-[60%] w-full'>
-        <label
-          htmlFor='modal-1'
-          className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
-        >
-          ✕
-        </label>
-        <h2 className='text-[45px]'>Register</h2>
-        <form
+
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size={'2xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontSize={{lg:'3xl',base:'xl'}}>Register</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <NewUserType/>
+                     <form
           className='w-full flex flex-col gap-7'
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -113,36 +147,11 @@ const RegisterForm = () => {
               <option value='' disabled>
                 Tell us about your diet?
               </option>
-              <option value='I eat 5 or more servings of vegetables per day'>
-                I eat 5 or more servings of vegetables per day
-              </option>
-              <option value='I eat two or more servings of fruit per day'>
-                I eat two or more servings of fruit per day
-              </option>
-              <option value='I have two or more servings of dairy (or equivalent) per day'>
-                I have two or more servings of dairy (or equivalent) per day
-              </option>
-              <option value='My cereals are mostly whole grains'>
-                My cereals are mostly whole grains
-              </option>
-              <option value='I eat fast lean protein every day'>
-                I eat fast lean protein every day
-              </option>
-              <option value='I eat fast food once per week or less'>
-                I eat fast food once per week or less
-              </option>
-              <option value='I eat pastries or cakes once a week or less'>
-                I eat pastries or cakes once a week or less
-              </option>
-              <option value='I have less than 1 teaspoon of salt per day'>
-                I have less than 1 teaspoon of salt per day
-              </option>
-              <option value='I have 2 or less alcoholic drinks on any day'>
-                I have 2 or less alcoholic drinks on any day
-              </option>
-              <option value='I drink at least 2 litres of water per day'>
-                I drink at least 2 litres of water per day
-              </option>
+              {dietOptions.map((diet,i)=> <option key={'diet'+i} value={diet}>
+                {diet}
+              </option>)}
+             
+             
             </select>
             <div className='text-red-200'>{errors.diet?.message}</div>
           </div>
@@ -170,12 +179,9 @@ const RegisterForm = () => {
               <option value='' disabled>
                 How many hours a day are you sitting
               </option>
-              {[
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-                19, 20, 21, 22, 23,
-              ].map((item) => (
-                <option value={item} key={item}>
-                  {item}
+              {Array.from({length:23},(_,i) => (
+                <option value={i+1} key={'sitting'+i}>
+                  {i+1}
                 </option>
               ))}
             </select>
@@ -245,12 +251,9 @@ const RegisterForm = () => {
                 If you are a current smoker, how many cigarettes do you smoke
                 per day?
               </option>
-              <option value='less than 5 cigarettes'>
-                less than 5 cigarettes
-              </option>
-              <option value='5 to 10 cigarettes'>5 to 10 cigarettes</option>
-              <option value='11 to 20 cigarettes'>11 to 20 cigarettes</option>
-              <option value='above 20 cigarettes'>above 20 cigarettes</option>
+              {smokingOptions.map((smokingOpt,i)=> <option key={'smokingOpt'+i} value={smokingOpt} >
+                {smokingOpt}
+              </option>)}
             </select>
           </div>
           <div>
@@ -262,9 +265,9 @@ const RegisterForm = () => {
               <option value='' disabled>
                 How mamy hours of sleep do you get per day?
               </option>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-                <option value={item} key={item}>
-                  {item}
+              {Array.from({length:13},(_,item) => (
+                <option value={item+1} key={'sleepLength'+item}>
+                  {item+1}
                 </option>
               ))}
             </select>
@@ -279,11 +282,10 @@ const RegisterForm = () => {
               <option value='' disabled>
                 Rate your overall Health
               </option>
-              <option value='Excellent'>Excellent</option>
-              <option value='Very good'>Very good</option>
-              <option value='Good'>Good</option>
-              <option value='Fair'>Fair</option>
-              <option value='Poor'>Poor</option>
+              {overallHealthOptions.map((healthOpt,i)=> <option key={'overallHealth'+i} value={healthOpt} >
+                {healthOpt}
+              </option>)}
+            
             </select>
             <div className='text-red-200'>{errors.overallHealth?.message}</div>
           </div>
@@ -296,7 +298,17 @@ const RegisterForm = () => {
             </button>
           </div>
         </form>
-      </div>
+          </ModalBody>
+
+          <ModalFooter>
+            {/* <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant='ghost'>Secondary Action</Button> */}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+     
     </div>
   );
 };

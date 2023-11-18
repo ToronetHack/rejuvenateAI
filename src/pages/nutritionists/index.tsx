@@ -246,7 +246,7 @@ export default function NutritionistPage() {
                     return (
                       <Button
                         onClick={() => handleSectionDuration(dur)}
-                        key={'dur' + i}
+                        key={'dur' + i} variant={'ghost'}
                         className={`text-primaryGreen rounded-full px-4 py-2 border ${
                           sectionDuration === dur ? 'bg-primaryYellow' : ''
                         }`}

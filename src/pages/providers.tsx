@@ -1,15 +1,16 @@
 'use client';
 
 import React from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+// import { ChakraProvider } from '@chakra-ui/react';
 
 import { AppWrapper } from '../context/state';
+import ChakraProviders from '@/providers/chakra-provider';
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (
    
       <AppWrapper>
-        <ChakraProvider>{children}</ChakraProvider>
+        <ChakraProviders>{children}</ChakraProviders>
       </AppWrapper>
   
   );

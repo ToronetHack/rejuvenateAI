@@ -27,6 +27,7 @@
     "add": "^2.0.6",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.1",
+    "boring-avatars": "^1.10.1",
     "connectkit": "^1.5.3",
     "date-fns": "^2.30.0",
     "encoding": "^0.1.13",

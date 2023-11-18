@@ -1,6 +1,7 @@
 import Workwithus from '@/images/png/work-with-us.png';
 import Image from 'next/image';
 import NutritionistForm from '../nutritionist-form';
+import { Button } from '@chakra-ui/react';
 
 const WorkWithUs = () => {
   return (
@@ -39,6 +40,11 @@ const WorkWithUs = () => {
             >
               Join us
             </label>
+            <Button colorScheme='secondaryColor' variant={'outline'}
+             size={'lg'} alignSelf={'flex-start'}
+          >
+            Join Us
+          </Button>
             <input className='modal-state' id='modal-3' type='checkbox' />
             <NutritionistForm />
           </>
