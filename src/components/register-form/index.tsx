@@ -1,19 +1,18 @@
 'use client';
-import React, { BaseSyntheticEvent, RefObject, useEffect, useRef, useState } from 'react';
+import React, { RefObject, useRef, useState } from 'react';
 //import { useRouter } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { uploadPromptToIpfs } from '@/helpers/prompt';
-import { Stack, Tab,
+import { Stack, 
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Button, Radio, RadioGroup, Box, Flex, HStack, Input, Selec, Selectt, Select } from '@chakra-ui/react';
+  ModalCloseButton, Button, Box, HStack, Input, Select } from '@chakra-ui/react';
 import { NewUserType, RegisterType } from '../new-user-type';
 //import { useAuth } from "near-social-bridge";
 import {Swiper,SwiperRef,SwiperSlide} from 'swiper/react';
@@ -52,8 +51,7 @@ const [SelectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors,isValid } = formState;
 
-  const onValidSubmit = async (data: any,event:BaseSyntheticEvent) => {
-event?.preventDefault()
+  const onValidSubmit = async (data: any) => {
     //    const cid = await uploadPromptToIpfs(data);
     if(isValid) {
 
@@ -100,7 +98,7 @@ event?.preventDefault()
    'above 20 cigarettes'
   ];
   return (
-    <div className='modal'>
+    <div >
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size={'xl'}>
         <ModalOverlay />
@@ -126,7 +124,7 @@ event?.preventDefault()
 <SwiperSlide>
 {SelectedUserType=='individual' &&
 
-          <form  onSubmit={handleSubmit(onValidSubmit,onInvalidSubmit)}>
+          <form  onSubmit={handleSubmit(onValidSubmit)}>
 
           <Swiper      nested allowTouchMove={false}  ref={swiperNestedRef as RefObject<SwiperRef>}>
             <SwiperSlide>
@@ -157,6 +155,7 @@ event?.preventDefault()
   // placeholder="What's your biological sex?"
   defaultValue=''
 >
+  
   <option value='' disabled>
     What&apos;s your biological sex?
   </option>

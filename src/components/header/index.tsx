@@ -22,6 +22,7 @@ const Header = ({ bg = 'transparent' }: { bg?: string}) => {
   }, [address, setAddress]);
 
   return (
+    <>
     <header
       className={`bg-${bg} px-2 pr-4 max-w-[1300px] w-full py-1 flex justify-between items-center mx-auto`}
     >
@@ -47,9 +48,11 @@ const Header = ({ bg = 'transparent' }: { bg?: string}) => {
         }
           {/* <ConnectKitButton /> */}
       
-      <RegisterForm isOpen={isOpen} onClose={onClose} />
 
     </header>
+      <RegisterForm isOpen={isOpen} onClose={onClose} />
+    </>
+
   );
 };
 
