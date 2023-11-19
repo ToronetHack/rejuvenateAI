@@ -1,5 +1,5 @@
 'use client';
-import React, { RefObject, useEffect, useRef, useState } from 'react';
+import React, { BaseSyntheticEvent, RefObject, useEffect, useRef, useState } from 'react';
 //import { useRouter } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -49,14 +49,22 @@ const [SelectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState, } = useForm(formOptions);
-  const { errors } = formState;
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors,isValid } = formState;
 
-  const onSubmit = async (data: any) => {
-
+  const onValidSubmit = async (data: any,event:BaseSyntheticEvent) => {
+event?.preventDefault()
     //    const cid = await uploadPromptToIpfs(data);
-    router.push('/member/dashboard');
+    if(isValid) {
+
+      router.push('/member/dashboard');
+    }
   };
+//   const onInvalidSubmit = (errors:any,event:BaseSyntheticEvent) => {
+// event.preventDefault()
+//     //    const cid = await uploadPromptToIpfs(data);
+   
+//   };
   const dietOptions = [
 
  'I eat 5 or more servings of vegetables per day',
@@ -118,7 +126,7 @@ const [SelectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
 <SwiperSlide>
 {SelectedUserType=='individual' &&
 
-          <form  onSubmit={handleSubmit(onSubmit)}>
+          <form  onSubmit={handleSubmit(onValidSubmit,onInvalidSubmit)}>
 
           <Swiper      nested allowTouchMove={false}  ref={swiperNestedRef as RefObject<SwiperRef>}>
             <SwiperSlide>
@@ -366,7 +374,7 @@ const [SelectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
           <HStack gap={4} my={6} justify={'flex-end'}>
           <Button variant={'outline'} colorScheme='primaryColor' onClick={()=>swiperNestedPrev()}>Back</Button>
 
-            <Button onClick={onSubmit}
+            <Button onClick={onValidSubmit}
               type='submit'
             >
               Complete Sign Up
