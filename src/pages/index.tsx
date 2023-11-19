@@ -7,13 +7,16 @@ import WorkWithUs from '@/components/work-with-us';
 import TalkToNutritionist from '@/components/talk-to-nutritionist';
 import CTA from '@/components/cta';
 import Footer from '@/components/footer';
+import { useDisclosure } from '@chakra-ui/react';
+import RegisterForm from '@/components/register-form';
+import 'swiper/css';
 
 const App = () => {
-
   return (
     <div className='bg-primaryBeige min-h-screen'>
       <div className='px-4 lg:px-8 w-full'>
         <Header />
+
       </div>
       <div className=' h-7 bg-[#EEC438]' />
       <Hero />

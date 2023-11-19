@@ -7,8 +7,11 @@ import { useAppContext } from '@/context/state';
 import RegisterForm from '../register-form';
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { Button, useDisclosure } from '@chakra-ui/react';
 
-const Header = ({ bg = 'transparent' }: { bg?: string }) => {
+const Header = ({ bg = 'transparent' }: { bg?: string}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { setAddress } = useAppContext();
   const { address } = useAccount();
   const { isConnected } = useAccount();
@@ -19,39 +22,37 @@ const Header = ({ bg = 'transparent' }: { bg?: string }) => {
   }, [address, setAddress]);
 
   return (
-    <section
-      className={`bg-${bg} px-2 max-w-[1300px] w-full py-1 flex justify-between items-center mx-auto`}
+    <>
+    <header
+      className={`bg-${bg} px-2 pr-4 max-w-[1300px] w-full py-1 flex justify-between items-center mx-auto`}
     >
       <div>
         <Link href={'/'} textDecor={'none'}>
           <RejuvenateAi />
         </Link>
       </div>
-      <>
-        {address ? (
+      
+        {address && (
           <>
-            <label
-              className='btn bg-[#014421] h-[48px] px-5 lg:h-[50px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
-              htmlFor='modal-1'
-            >
-              {' '}
-              Register
-            </label>
-            <input className='modal-state' id='modal-1' type='checkbox' />
+          <Button colorScheme='primaryColor' variant={'solid'}  onClick={()=>onOpen()}>Register</Button>
+        
           </>
-        ) : (
-          <button
-            type='submit'
-            onClick={openConnectModal}
-            className='btn w-full max-w-[200px] flex items-center justify-center bg-[#014421] h-[48px] px-5 lg:h-[50px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
-          >
-            Connect Wallet
-          </button>
-          //<ConnectKitButton />
         )}
-      </>
-      <RegisterForm />
-    </section>
+        {!address &&
+          <Button  size={'lg'}
+          
+          onClick={openConnectModal}
+          >
+          Connect Wallet
+        </Button>
+        }
+          {/* <ConnectKitButton /> */}
+      
+
+    </header>
+      <RegisterForm isOpen={isOpen} onClose={onClose} />
+    </>
+
   );
 };
 

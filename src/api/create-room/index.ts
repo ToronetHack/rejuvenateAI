@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+ async function handler() {
   try {
     const { data } = await axios.post(
       'https://api.huddle01.com/api/v1/create-room',
@@ -26,4 +26,4 @@ export async function GET() {
   }
 }
 
-// export  {handler as GET, handler as POST}
+export  {handler as GET, handler as POST}

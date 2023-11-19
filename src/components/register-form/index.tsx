@@ -1,17 +1,33 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { RefObject, useRef, useState } from 'react';
 //import { useRouter } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { uploadPromptToIpfs } from '@/helpers/prompt';
+import { Stack, 
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton, Button, Box, HStack, Input, Select } from '@chakra-ui/react';
+import { NewUserType, RegisterType } from '../new-user-type';
 //import { useAuth } from "near-social-bridge";
+import {Swiper,SwiperRef,SwiperSlide} from 'swiper/react';
+import SwiperMain from 'swiper';
+import Icon from '../Icon';
+import NutritionistForm from '../nutritionist-form';
 
-const RegisterForm = () => {
+
+const RegisterForm = ({isOpen,onClose}:{isOpen:boolean,onClose:()=>void}) => {
   //const auth = useAuth()
   const router = useRouter();
-
+const swiperRef=useRef<SwiperRef>()
+const swiperNestedRef=useRef<SwiperRef>()
+const [activeSlideIndex,setActiveSlideIndex]=useState(0);
+const [SelectedUserType,setSelectedUserType]=useState<RegisterType>('individual')
   // form validation rules
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Field is required'),
@@ -33,123 +49,169 @@ const RegisterForm = () => {
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
-  const { errors } = formState;
+  const { errors,isValid } = formState;
 
-  const onSubmit = async (data: any) => {
+  const onValidSubmit = async (data: any) => {
     //    const cid = await uploadPromptToIpfs(data);
-    router.push('/member/dashboard');
-  };
+    if(isValid) {
 
+      router.push('/member/dashboard');
+    }
+  };
+//   const onInvalidSubmit = (errors:any,event:BaseSyntheticEvent) => {
+// event.preventDefault()
+//     //    const cid = await uploadPromptToIpfs(data);
+   
+//   };
+  const dietOptions = [
+
+ 'I eat 5 or more servings of vegetables per day',
+ 'I eat two or more servings of fruit per day', 
+ 'I have two or more servings of dairy (or equivalent) per day', 
+ 'My cereals are mostly whole grains',
+ 'I eat fast lean protein every day',
+ 'I eat fast food once per week or less', 
+ 'I eat pastries or cakes once a week or less', 
+ 'I have less than 1 teaspoon of salt per day', 
+ 'I have 2 or less alcoholic drinks on any day', 
+ 'I drink at least 2 litres of water per day', 
+  ];
+
+
+  const swiperNestedNext=()=>{
+    swiperNestedRef.current?.swiper.slideNext()
+  }
+  const swiperNestedPrev=()=>{
+    swiperNestedRef.current?.swiper.slidePrev()
+  }
+  const overallHealthOptions = [
+   'Excellent',
+   'Very good',
+   'Good',
+   'Fair',
+   'Poor'
+  ];
+  const smokingOptions = [
+   'less than 5 cigarettes',
+   '5 to 10 cigarettes',
+   '11 to 20 cigarettes',
+   'above 20 cigarettes'
+  ];
   return (
-    <div className='modal'>
-      <label className='modal-overlay' htmlFor='modal-1'></label>
-      <div className='modal-content flex flex-col gap-5 max-w-[90%] lg:max-w-[60%] w-full'>
-        <label
-          htmlFor='modal-1'
-          className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
-        >
-          ✕
-        </label>
-        <h2 className='text-[45px]'>Register</h2>
-        <form
-          className='w-full flex flex-col gap-7'
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div>
-            <input
-              className='input w-full max-w-[100%]'
-              {...register('fullName')}
-              placeholder='Full name'
-            />
-            <div className='text-red-200'>{errors.fullName?.message}</div>
-          </div>
-          <div>
-            <input
-              type='date'
-              id='start'
-              {...register('birthDate')}
-              className='input w-full max-w-[100%]'
-            ></input>
-            <div className='text-red-200'>{errors.birthDate?.message}</div>
-          </div>
-          <div>
-            <select
-              className='select w-full max-w-[100%]'
-              {...register('sex')}
-              placeholder="What's your biological sex?"
-              defaultValue=''
-            >
-              <option value='' disabled>
-                What&apos;s your biological sex?
-              </option>
-              <option value='name'>Male</option>
-              <option value='female'>Female</option>
-            </select>
-            <div className='text-red-200'>{errors.sex?.message}</div>
-          </div>
-          <div>
-            <input
-              className='input w-full max-w-[100%]'
+    <div >
+
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size={'xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontSize={{lg:'3xl',base:'xl'}}>
+            <HStack spacing={4} align={'center'} >
+{activeSlideIndex===1 &&
+<Button variant={'outline'} rounded={'full'} size={'sm'}  onClick={()=>swiperRef.current?.swiper.slidePrev()} ><Icon size={20} name='arrow_back'/></Button>
+}
+<span>
+
+            Register
+</span>
+            </HStack>
+            </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box as={Swiper} onActiveIndexChange={(swiper:SwiperMain)=>{setActiveSlideIndex(swiper.activeIndex)}}  ref={swiperRef as RefObject<SwiperRef>} allowTouchMove={false}>
+<SwiperSlide>
+
+            <NewUserType onClick={()=>swiperRef.current?.swiper.slideNext()} getValue={setSelectedUserType}/>
+</SwiperSlide>
+<SwiperSlide>
+{SelectedUserType=='individual' &&
+
+          <form  onSubmit={handleSubmit(onValidSubmit)}>
+
+          <Swiper      nested allowTouchMove={false}  ref={swiperNestedRef as RefObject<SwiperRef>}>
+            <SwiperSlide>
+              <Stack spacing={5}>
+
+            <div>
+
+<Input
+  className=' w-full max-w-[100%]' 
+  {...register('fullName')}
+  placeholder='Full name'
+/>
+<div className='text-red-500'>{errors.fullName?.message}</div>
+</div>
+<div>
+<Input
+  type='date'
+  id='start'
+  {...register('birthDate')}
+  className=' w-full max-w-[100%]'
+/>
+<div className='text-red-500'>{errors.birthDate?.message}</div>
+</div>
+<div>
+<Select
+  className='Select w-full max-w-[100%]'
+  {...register('sex')}
+  // placeholder="What's your biological sex?"
+  defaultValue=''
+>
+  
+  <option value='' disabled>
+    What&apos;s your biological sex?
+  </option>
+  <option value='name'>Male</option>
+  <option value='female'>Female</option>
+</Select>
+<div className='text-red-500'>{errors.sex?.message}</div>
+</div>
+</Stack>
+
+<HStack my={6} justify={'flex-end'} >
+
+<Button colorScheme='primaryColor'  onClick={()=>swiperNestedNext()}>Next</Button>
+</HStack>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <Stack spacing={4}>
+            <div>
+            <Input
+              className='Input w-full max-w-[100%]'
               {...register('weight')}
               placeholder="What's your weight in kg?"
             />
-            <div className='text-red-200'>{errors.weight?.message}</div>
+            <div className='text-red-500'>{errors.weight?.message}</div>
           </div>
           <div>
-            <input
-              className='input w-full max-w-[100%]'
+            <Input
+              className='Input w-full max-w-[100%]'
               {...register('height')}
               placeholder="What's your height in feet and inches?"
             />
-            <div className='text-red-200'>{errors.height?.message}</div>
+            <div className='text-red-500'>{errors.height?.message}</div>
           </div>
           <div>
-            <select
-              className='select w-full max-w-[100%]'
+            <Select
+              className='Select w-full max-w-[100%]'
               {...register('diet')}
-              placeholder='Tell us about your diet?'
+              // placeholder='Tell us about your diet?'
               defaultValue=''
             >
               <option value='' disabled>
                 Tell us about your diet?
               </option>
-              <option value='I eat 5 or more servings of vegetables per day'>
-                I eat 5 or more servings of vegetables per day
-              </option>
-              <option value='I eat two or more servings of fruit per day'>
-                I eat two or more servings of fruit per day
-              </option>
-              <option value='I have two or more servings of dairy (or equivalent) per day'>
-                I have two or more servings of dairy (or equivalent) per day
-              </option>
-              <option value='My cereals are mostly whole grains'>
-                My cereals are mostly whole grains
-              </option>
-              <option value='I eat fast lean protein every day'>
-                I eat fast lean protein every day
-              </option>
-              <option value='I eat fast food once per week or less'>
-                I eat fast food once per week or less
-              </option>
-              <option value='I eat pastries or cakes once a week or less'>
-                I eat pastries or cakes once a week or less
-              </option>
-              <option value='I have less than 1 teaspoon of salt per day'>
-                I have less than 1 teaspoon of salt per day
-              </option>
-              <option value='I have 2 or less alcoholic drinks on any day'>
-                I have 2 or less alcoholic drinks on any day
-              </option>
-              <option value='I drink at least 2 litres of water per day'>
-                I drink at least 2 litres of water per day
-              </option>
-            </select>
-            <div className='text-red-200'>{errors.diet?.message}</div>
+              {dietOptions.map((diet,i)=> <option key={'diet'+i} value={diet}>
+                {diet}
+              </option>)}
+             
+             
+            </Select>
+            <div className='text-red-500'>{errors.diet?.message}</div>
           </div>
           <div>
-            <select
+            <Select
               {...register('active')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
@@ -158,33 +220,43 @@ const RegisterForm = () => {
               <option value='inactive'>inactive</option>
               <option value='active'>active</option>
               <option value='very active'>very active</option>
-            </select>
-            <div className='text-red-200'>{errors.active?.message}</div>
+            </Select>
+            <div className='text-red-500'>{errors.active?.message}</div>
           </div>
-          <div>
-            <select
+          </Stack>
+
+          <HStack gap={4} my={6} justify={'flex-end'} >
+
+
+<Button colorScheme='primaryColor'  variant={'outline'} onClick={()=>swiperNestedPrev()}>Back</Button>
+<Button colorScheme='primaryColor'  onClick={()=>swiperNestedNext()}>Next</Button>
+
+</HStack>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Stack spacing={4}  >
+
+            <div>
+            <Select
               {...register('sitting')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
                 How many hours a day are you sitting
               </option>
-              {[
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-                19, 20, 21, 22, 23,
-              ].map((item) => (
-                <option value={item} key={item}>
-                  {item}
+              {Array.from({length:23},(_,i) => (
+                <option value={i+1} key={'sitting'+i}>
+                  {i+1}
                 </option>
               ))}
-            </select>
-            <div className='text-red-200'>{errors.sitting?.message}</div>
+            </Select>
+            <div className='text-red-500'>{errors.sitting?.message}</div>
           </div>
           <div>
-            <select
+            <Select
               {...register('alcohol')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
@@ -197,13 +269,13 @@ const RegisterForm = () => {
               <option value='greater than 20 drinks a week'>
                 greater than 20 drinks a week
               </option>
-            </select>
-            <div className='text-red-200'>{errors.alcohol?.message}</div>
+            </Select>
+            <div className='text-red-500'>{errors.alcohol?.message}</div>
           </div>
           <div>
-            <select
+            <Select
               {...register('smoke')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
@@ -212,13 +284,13 @@ const RegisterForm = () => {
               <option value='Never smoked'>Never smoked</option>
               <option value='Ex smoker'>Ex smoker</option>
               <option value='Current smoker'>Current smoker</option>
-            </select>
-            <div className='text-red-200'>{errors.smoke?.message}</div>
+            </Select>
+            <div className='text-red-500'>{errors.smoke?.message}</div>
           </div>
           <div>
-            <select
+            <Select
               {...register('smokingStopped')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
@@ -233,70 +305,110 @@ const RegisterForm = () => {
               <option value='more than twelve months ago'>
                 more than twelve months ago
               </option>
-            </select>
+            </Select>
           </div>
-          <div>
-            <select
+          </Stack>
+
+          <HStack gap={4} my={6} justify={'flex-end'} >
+
+
+          <Button colorScheme='primaryColor'  variant={'outline'} onClick={()=>swiperNestedPrev()}>Back</Button>
+<Button colorScheme='primaryColor'  onClick={()=>swiperNestedNext()}>Next</Button>
+       
+          </HStack>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Stack spacing={4}>
+
+            <div>
+            <Select
               {...register('smokingLength')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
                 If you are a current smoker, how many cigarettes do you smoke
                 per day?
               </option>
-              <option value='less than 5 cigarettes'>
-                less than 5 cigarettes
-              </option>
-              <option value='5 to 10 cigarettes'>5 to 10 cigarettes</option>
-              <option value='11 to 20 cigarettes'>11 to 20 cigarettes</option>
-              <option value='above 20 cigarettes'>above 20 cigarettes</option>
-            </select>
+              {smokingOptions.map((smokingOpt,i)=> <option key={'smokingOpt'+i} value={smokingOpt} >
+                {smokingOpt}
+              </option>)}
+            </Select>
           </div>
           <div>
-            <select
+            <Select
               {...register('sleepLength')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
                 How mamy hours of sleep do you get per day?
               </option>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
-                <option value={item} key={item}>
-                  {item}
+              {Array.from({length:13},(_,item) => (
+                <option value={item+1} key={'sleepLength'+item}>
+                  {item+1}
                 </option>
               ))}
-            </select>
-            <div className='text-red-200'>{errors.sleepLength?.message}</div>
+            </Select>
+            <div className='text-red-500'>{errors.sleepLength?.message}</div>
           </div>
           <div>
-            <select
+            <Select
               {...register('overallHealth')}
-              className='select w-full max-w-[100%]'
+              className='Select w-full max-w-[100%]'
               defaultValue=''
             >
               <option value='' disabled>
                 Rate your overall Health
               </option>
-              <option value='Excellent'>Excellent</option>
-              <option value='Very good'>Very good</option>
-              <option value='Good'>Good</option>
-              <option value='Fair'>Fair</option>
-              <option value='Poor'>Poor</option>
-            </select>
-            <div className='text-red-200'>{errors.overallHealth?.message}</div>
+              {overallHealthOptions.map((healthOpt,i)=> <option key={'overallHealth'+i} value={healthOpt} >
+                {healthOpt}
+              </option>)}
+            
+            </Select>
+            <div className='text-red-500'>{errors.overallHealth?.message}</div>
           </div>
-          <div className='flex'>
-            <button onClick={onSubmit}
+          </Stack>
+
+          <HStack gap={4} my={6} justify={'flex-end'}>
+          <Button variant={'outline'} colorScheme='primaryColor' onClick={()=>swiperNestedPrev()}>Back</Button>
+
+            <Button onClick={onValidSubmit}
               type='submit'
-              className='btn w-full max-w-[100%] flex items-center bg-[#014421] h-[48px] px-5 lg:h-[50px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
             >
-              Register
-            </button>
-          </div>
-        </form>
-      </div>
+              Complete Sign Up
+            </Button>
+          </HStack>
+          
+            </SwiperSlide>
+          </Swiper>
+         
+         
+          </form>
+        
+         
+      
+}
+{SelectedUserType==='nutritionist' &&
+<Box>
+<NutritionistForm showModal={false}/>
+</Box>
+} 
+
+</SwiperSlide>
+            </Box>
+               
+          </ModalBody>
+
+          <ModalFooter>
+            {/* <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant='ghost'>Secondary Action</Button> */}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+     
     </div>
   );
 };

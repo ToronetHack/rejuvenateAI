@@ -28,12 +28,11 @@ const TalkToNutritionist = () => {
             nutritionist today and take that exciting step towards a healthier,
             more fulfilling life.
           </p>
-          <button
-            onClick={findOutMoreHandler}
-            className='bg-primaryGreen max-w-[220px] h-[48px] px-5 hover:bg-primaryYellow hover:text-primaryBeige lg:h-[59px] font-bold text-base lg:text-[20px] text-[#F5F5DC] rounded-xl'
+          <Button
+            onClick={findOutMoreHandler} size={'lg'} alignSelf={'flex-start'}
           >
             Find out more
-          </button>
+          </Button>
           {/* <Button size={'lg'} variant={'solid'} className="bg-primaryGreen text-primaryBeige" rounded={'md'}>Find out more</Button> */}
         </div>
         <div className='w-full h-[350px] max-w-[471px] lg:h-[474px] relative'>

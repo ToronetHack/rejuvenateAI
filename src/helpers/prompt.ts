@@ -5,6 +5,24 @@ import { Web3Storage } from 'web3.storage';
 function getAccessToken() {
   return process.env.NEXT_PUBLIC_WEB3STORAGE_API_TOKEN;
 }
+export function convertCamelCaseToSpaceSeparated(camelCaseString:string) {
+  // Insert a space before each uppercase letter
+  const spacedString = camelCaseString.replace(/([a-z])([A-Z])/g, '$1 $2');
+  // Capitalize the first letter
+  return spacedString.charAt(0).toUpperCase() + spacedString.slice(1);
+}
+export function maskHexAddress(address:string) {
+  if (typeof address !== 'string') {
+  return ''
+  }
+
+
+  const visibleLength = 4;
+  const maskedPart = '*'.repeat(6);
+
+  return `${address.slice(0, visibleLength + 2)}${maskedPart}${address.slice(-visibleLength)}`;
+}
+
 
 function makeStorageClient() {
   return new Web3Storage({ token: getAccessToken() });
