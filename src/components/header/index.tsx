@@ -22,33 +22,34 @@ const Header = ({ bg = 'transparent' }: { bg?: string}) => {
   }, [address, setAddress]);
 
   return (
-    <section
-      className={`bg-${bg} px-2 max-w-[1300px] w-full py-1 flex justify-between items-center mx-auto`}
+    <header
+      className={`bg-${bg} px-2 pr-4 max-w-[1300px] w-full py-1 flex justify-between items-center mx-auto`}
     >
       <div>
         <Link href={'/'} textDecor={'none'}>
           <RejuvenateAi />
         </Link>
       </div>
-      <>
-        {address ? (
+      
+        {address && (
           <>
-          <Button colorScheme='primaryColor' variant={'solid'} size={'lg'} onClick={()=>onOpen()}>Register</Button>
+          <Button colorScheme='primaryColor' variant={'solid'}  onClick={()=>onOpen()}>Register</Button>
         
           </>
-        ) : (
+        )}
+        {!address &&
           <Button  size={'lg'}
-            
+          
           onClick={openConnectModal}
-        >
+          >
           Connect Wallet
         </Button>
-          //<ConnectKitButton />
-        )}
-      </>
+        }
+          {/* <ConnectKitButton /> */}
+      
       <RegisterForm isOpen={isOpen} onClose={onClose} />
 
-    </section>
+    </header>
   );
 };
 
