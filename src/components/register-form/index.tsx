@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 //import { useRouter } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -13,14 +13,18 @@ import { Stack, Tab,
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Button, Radio, RadioGroup } from '@chakra-ui/react';
-import { NewUserType } from '../new-user-type';
+  ModalCloseButton, TabIndicator, TabList, TabPanel, TabPanels, Tabs, Text, Button, Radio, RadioGroup, Box } from '@chakra-ui/react';
+import { NewUserType, RegisterType } from '../new-user-type';
 //import { useAuth } from "near-social-bridge";
+import {Swiper,SwiperRef,SwiperSlide} from 'swiper/react';
+import SwiperMain from 'swiper';
+
 
 const RegisterForm = ({isOpen,onClose}:{isOpen:boolean,onClose:()=>void}) => {
   //const auth = useAuth()
   const router = useRouter();
-
+const swiperRef=useRef<SwiperRef>()
+const [selectedUserType,setSelectedUserType]=useState<RegisterType>('individual')
   // form validation rules
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Field is required'),
@@ -84,8 +88,14 @@ const RegisterForm = ({isOpen,onClose}:{isOpen:boolean,onClose:()=>void}) => {
           <ModalHeader fontSize={{lg:'3xl',base:'xl'}}>Register</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <NewUserType/>
-                     <form
+            <Box as={Swiper} ref={swiperRef as RefObject<SwiperRef>} allowSlidePrev={false}>
+<SwiperSlide>slide 1
+
+            <NewUserType onClick={()=>swiperRef.current?.swiper.slideNext()} getValue={setSelectedUserType}/>
+</SwiperSlide>
+<SwiperSlide>
+{selectedUserType=='individual' &&
+<form
           className='w-full flex flex-col gap-7'
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -298,6 +308,17 @@ const RegisterForm = ({isOpen,onClose}:{isOpen:boolean,onClose:()=>void}) => {
             </button>
           </div>
         </form>
+}
+{selectedUserType==='nutritionist' &&
+<Box>
+  Nutritionist form
+</Box>
+}
+<Button variant={'outline'}>Back</Button>
+<Button>Complete</Button>
+</SwiperSlide>
+            </Box>
+               
           </ModalBody>
 
           <ModalFooter>

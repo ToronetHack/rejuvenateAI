@@ -9,6 +9,7 @@ import CTA from '@/components/cta';
 import Footer from '@/components/footer';
 import { useDisclosure } from '@chakra-ui/react';
 import RegisterForm from '@/components/register-form';
+import 'swiper/css';
 
 const App = () => {
   return (
