@@ -39,16 +39,11 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({config, colors,components:{
   Button:{
+    
     variants: {
-      'with-shadow': {
-        bg: 'red.400',
-        boxShadow: '0 0 2px 2px #efdfde',
-      },
-      // 4. We can override existing variants
       solid: () => ({
         bg:'primaryColor.800',color:'secondaryColor.300' ,_hover:{bg:'secondaryColor.400',color:'primaryColor.900'}
       }),
-      // 5. We can add responsive variants
      
     },
   }

@@ -20,7 +20,7 @@ Individual
 
 </Text>
 <Text as={'span'} fontSize={'sm'} color={'gray.500'}>
-I want to join the community
+I want to join a community
 </Text>
 </Stack>
       </Radio>
