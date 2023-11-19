@@ -314,7 +314,7 @@ const [selectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
   Nutritionist form
 </Box>
 }
-<Button variant={'outline'}>Back</Button>
+<Button variant={'outline'}  onClick={()=>swiperRef.current?.swiper.slidePrev()} >Back</Button>
 <Button>Complete</Button>
 </SwiperSlide>
             </Box>
