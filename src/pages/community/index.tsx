@@ -132,7 +132,7 @@ export default function NutritionistPage() {
                     rounded={'full'}
                     size={'md'}
                   >
-                    <Icon size={24} name='book' /> Join Community
+                    <Icon size={24} name='group_add' /> Join Community
                   </Button>
                 </Flex>
                 {c.description &&
