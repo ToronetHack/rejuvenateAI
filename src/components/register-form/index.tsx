@@ -88,7 +88,7 @@ const [selectedUserType,setSelectedUserType]=useState<RegisterType>('individual'
           <ModalHeader fontSize={{lg:'3xl',base:'xl'}}>Register</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Box as={Swiper} ref={swiperRef as RefObject<SwiperRef>} allowSlidePrev={false}>
+            <Box as={Swiper} ref={swiperRef as RefObject<SwiperRef>} >
 <SwiperSlide>slide 1
 
             <NewUserType onClick={()=>swiperRef.current?.swiper.slideNext()} getValue={setSelectedUserType}/>
