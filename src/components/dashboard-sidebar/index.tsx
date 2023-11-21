@@ -29,7 +29,8 @@ export default function DashboardSideBar(props: {
             : 'text-secondaryGray'
         }`}
       >
-        <Link textDecor={'none!important'}
+        <Link
+          textDecor={'none!important'}
           href={buildLink(props?.entryPath + '/', link?.url)}
           alignItems={'center'}
           className='flex gap-[40px]'

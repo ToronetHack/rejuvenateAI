@@ -24,9 +24,18 @@ export function maskHexAddress(address:string) {
 }
 
 
+// function makeStorageClient() {
+//   return new Web3Storage({ token: getAccessToken() });
+// }
+
 function makeStorageClient() {
-  return new Web3Storage({ token: getAccessToken() });
+  const token = getAccessToken() as string;
+  return new Web3Storage({
+    token:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhmOWMxOTNjODJlODMzMjVDMThkNWM4NzRCM2Q2NGM5ZjI5NDdEOUQiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODM2NTY1NzExNjEsIm5hbWUiOiJLb2lpIn0.qZJmInvmwLCkq_7T3h2gfm4Hs84MNKEVooOuAFfbIXI',
+  });
 }
+
 export const uploadPromptToIpfs = async (data: any) => {
   const client = makeStorageClient();
   const prompt = {
@@ -128,5 +137,17 @@ export const uploadPromptToIpfs = async (data: any) => {
   });
   const res = await client.put([fileObj]);
   console.log(res);
+  return res;
+};
+
+export const putJSONandGetHash = async (json: any) => {
+  const client = makeStorageClient();
+  const content = new Blob([JSON.stringify(json)], {
+    type: 'application/json',
+  });
+  const fileObj = new File([content], 'file.json', {
+    type: 'application/json',
+  });
+  const res = await client.put([fileObj]);
   return res;
 };
