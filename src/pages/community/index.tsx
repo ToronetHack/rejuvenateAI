@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import RandomAvatar from 'boring-avatars'
+import BoringAvatar from 'boring-avatars'
 //@ts-ignore
 import DatePicker from 'react-datepicker';
 type Community = {
@@ -110,7 +110,7 @@ export default function NutritionistPage() {
                   {c.cover && 
                   <Avatar size={'lg'} src={c.cover} />
                   }
-                  {!c.cover && <RandomAvatar variant='sunset' colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]} />}
+                  {!c.cover && <BoringAvatar variant='sunset' colors={["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"]} />}
                   <Box>
                     <Heading
                       className='text-primaryGreen'
