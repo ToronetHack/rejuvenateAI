@@ -178,8 +178,8 @@ export default function CommunityViewPage() {
               </Tab>
             </TabList>
             <TabPanels h={'full'} py={3}>
-              <TabPanel pl={0} h={'full'} minH={'400px'} pos={'relative'}>
-                <Box maxH={'400px'} overflowY={'auto'}>
+              <TabPanel pl={0}  minH={'400px'} pos={'relative'}>
+                <Box maxH={'350px'} overflowY={'auto'}>
                   <Stack
                     divider={<StackDivider />}
                     py={4}

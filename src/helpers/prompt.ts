@@ -37,9 +37,9 @@ export function maskHexAddress(address: string) {
   }
 
   const visibleLength = 4;
-  const maskedPart = '*'.repeat(6);
+  const maskedPart = '*'.repeat(5);
 
-  return `${address.slice(0, visibleLength + 2)}${maskedPart}${address.slice(
+  return `${address.slice(0, visibleLength + 1)}${maskedPart}${address.slice(
     -visibleLength
   )}`;
 }

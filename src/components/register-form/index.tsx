@@ -1,6 +1,6 @@
 'use client';
 import React, { RefObject, useRef, useState } from 'react';
-//import { useRouter } from 'next/navigation';
+
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -26,7 +26,7 @@ import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import SwiperMain from 'swiper';
 import Icon from '../Icon';
 import NutritionistForm from '../nutritionist-form';
-
+import { countries } from '@/utils/countries';
 const RegisterForm = ({
   isOpen,
   onClose,
@@ -35,7 +35,6 @@ const RegisterForm = ({
   onClose: () => void;
 }) => {
   //const auth = useAuth()
-  const router = useRouter();
   const swiperRef = useRef<SwiperRef>();
   const swiperNestedRef = useRef<SwiperRef>();
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -45,6 +44,7 @@ const RegisterForm = ({
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Field is required'),
     sex: Yup.string().required('Field is required'),
+    country: Yup.string().required('Field is required'),
     weight: Yup.string().required('Field is required'),
     height: Yup.string().required('Field is required'),
     diet: Yup.string().required('Field is required'),
@@ -61,23 +61,8 @@ const RegisterForm = ({
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState } = useForm(formOptions);
-  const {
-    errors,
-    isValid,
-    isSubmitted,
-    isSubmitSuccessful,
-    isSubmitting,
-    isLoading,
-    isValidating,
-  } = formState;
-  console.log({
-    isLoading,
-    isValidating,
-    isSubmitSuccessful,
-    isSubmitted,
-    isSubmitting,
-  });
+  const { register, handleSubmit, formState } = useForm(formOptions);
+  const { errors, isValid, isSubmitSuccessful } = formState;
 
   const onValidSubmit = async (data: any) => {
     if (isSubmitSuccessful) {
@@ -195,6 +180,30 @@ const RegisterForm = ({
                             />
                             <div className='text-red-500'>
                               {errors.birthDate?.message}
+                            </div>
+                          </div>
+                          <div>
+                            <Select
+                              className='Select w-full max-w-[100%]'
+                              {...register('country')}
+                              // placeholder="What's your biological sex?"
+                              defaultValue=''
+                            >
+                              <option value='' disabled>
+                                Select your country
+                              </option>
+
+                              {countries.map((country, i) => (
+                                <option
+                                  key={'country' + i}
+                                  value={country.name}
+                                >
+                                  {country.name}
+                                </option>
+                              ))}
+                            </Select>
+                            <div className='text-red-500'>
+                              {errors.country?.message}
                             </div>
                           </div>
                           <div>
