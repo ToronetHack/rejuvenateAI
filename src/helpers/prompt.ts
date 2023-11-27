@@ -1,28 +1,48 @@
 import { Petit_Formal_Script } from 'next/font/google';
 //@ts-ignore
 import { Web3Storage } from 'web3.storage';
+import {
+  formatDistance,
+  format,
+  isToday,
+  isYesterday,
+  formatDistanceStrict,
+} from 'date-fns';
+
+export const formatChatTimestamp = (timestamp: number | Date) => {
+  const currentDate = new Date();
+  const messageDate = new Date(timestamp);
+
+  if (isToday(messageDate)) {
+    return `Today ${format(messageDate, 'h:mm a')}`;
+  } else if (isYesterday(messageDate)) {
+    return `Yesterday ${format(messageDate, 'h:mm a')}`;
+  } else {
+    return format(messageDate, 'yyyy/M/d h:mm a');
+  }
+};
 
 function getAccessToken() {
   return process.env.NEXT_PUBLIC_WEB3STORAGE_API_TOKEN;
 }
-export function convertCamelCaseToSpaceSeparated(camelCaseString:string) {
+export function convertCamelCaseToSpaceSeparated(camelCaseString: string) {
   // Insert a space before each uppercase letter
   const spacedString = camelCaseString.replace(/([a-z])([A-Z])/g, '$1 $2');
   // Capitalize the first letter
   return spacedString.charAt(0).toUpperCase() + spacedString.slice(1);
 }
-export function maskHexAddress(address:string) {
+export function maskHexAddress(address: string) {
   if (typeof address !== 'string') {
-  return ''
+    return '';
   }
 
-
   const visibleLength = 4;
-  const maskedPart = '*'.repeat(6);
+  const maskedPart = '*'.repeat(5);
 
-  return `${address.slice(0, visibleLength + 2)}${maskedPart}${address.slice(-visibleLength)}`;
+  return `${address.slice(0, visibleLength + 1)}${maskedPart}${address.slice(
+    -visibleLength
+  )}`;
 }
-
 
 function makeStorageClient() {
   return new Web3Storage({ token: getAccessToken() });

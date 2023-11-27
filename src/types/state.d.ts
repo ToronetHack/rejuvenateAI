@@ -17,3 +17,12 @@ export type stateContextType = {
   setAddress: (data: string) => void;
   setLoading: (data: boolean) => void;
 };
+export type Community = {
+  name: string;
+  description: string;
+  cover: string;
+  membersCount: number;
+  id: number;
+  slug: string;
+  members: object[];
+};
