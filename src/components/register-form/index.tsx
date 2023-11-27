@@ -5,6 +5,14 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { useAppContext } from '@/context/state';
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+  useAccount,
+} from 'wagmi';
+import { ethers } from 'ethers';
 import {
   Stack,
   Modal,
@@ -27,6 +35,11 @@ import SwiperMain from 'swiper';
 import Icon from '../Icon';
 import NutritionistForm from '../nutritionist-form';
 import { countries } from '@/utils/countries';
+import { putJSONandGetHash } from '@/helpers/prompt';
+import { useDebounce } from '@/hooks/useDebounce';
+import { communityAbi } from '../../../abis';
+import { communityAddr } from '@/utils/constants';
+
 const RegisterForm = ({
   isOpen,
   onClose,
@@ -35,12 +48,17 @@ const RegisterForm = ({
   onClose: () => void;
 }) => {
   //const auth = useAuth()
+  const { address } = useAccount();
   const router = useRouter();
   const swiperRef = useRef<SwiperRef>();
   const swiperNestedRef = useRef<SwiperRef>();
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [SelectedUserType, setSelectedUserType] =
     useState<RegisterType>('individual');
+    const { user, setUser, allTokensData } = useAppContext();
+    const [amount, setAmount] = useState('0.01');
+    const debouncedAmount = useDebounce<string>(amount, 500);
+
   // form validation rules
   const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Field is required'),
@@ -64,6 +82,28 @@ const RegisterForm = ({
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm(formOptions);
   const { errors, isValid, isSubmitSuccessful } = formState;
+  const [cid, setCid] = useState<string>('');
+
+  const { config } = usePrepareContractWrite({
+    //@ts-ignore
+    address: communityAddr,
+    abi: communityAbi,
+    functionName: 'joinCommunity',
+    args: [cid, allTokensData.userNftUri],
+    //@ts-ignore
+    value: ethers.utils.parseEther(debouncedAmount || '0'),
+  });
+
+  const { write: joinCommunity, data } = useContractWrite(config);
+
+  const { isLoading } = useWaitForTransaction({
+    hash: data?.hash,
+    onSuccess(tx) {
+      console.log(tx);
+      router.push('/member/dashboard');
+    },
+  });
+
 
   const onValidSubmit = async (data: any) => {
     if (isSubmitSuccessful) {
@@ -71,7 +111,35 @@ const RegisterForm = ({
     }
     //    const cid = await uploadPromptToIpfs(data);
     if (isValid) {
-      router.push('/member/dashboard');
+        // Serialize the form data into a JSON object
+      const formDataObject = {
+        fullName: data.fullName,
+        sex: data.sex,
+        weight: data.weight,
+        height: data.height,
+        diet: data.diet,
+        active: data.active,
+        sitting: data.sitting,
+        alcohol: data.alcohol,
+        smoke: data.smoke,
+        sleepLength: data.sleepLength,
+        overallHealth: data.overallHealth,
+        birthDate: data.birthDate,
+        smokingStopped: data.smokingStopped,
+        smokingLength: data.smokingLength,
+      };
+
+      const cid = await putJSONandGetHash(formDataObject);
+      
+      setCid(cid);
+      setUser({
+        ...user,
+        userAddress: address,
+        userCidData: cid,
+        name: data.fullName,
+      });
+
+      joinCommunity?.();
     }
   };
   //   const onInvalidSubmit = (errors:any,event:BaseSyntheticEvent) => {
@@ -492,7 +560,7 @@ const RegisterForm = ({
                             Back
                           </Button>
 
-                          <Button onClick={onValidSubmit} type='submit'>
+                          <Button type='submit'>
                             Complete Sign Up
                           </Button>
                         </HStack>

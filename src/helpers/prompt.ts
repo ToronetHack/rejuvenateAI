@@ -45,7 +45,7 @@ export function maskHexAddress(address: string) {
 }
 
 function makeStorageClient() {
-  return new Web3Storage({ token: getAccessToken() });
+  return new Web3Storage({ token: getAccessToken() as string});
 }
 export const uploadPromptToIpfs = async (data: any) => {
   const client = makeStorageClient();
@@ -148,5 +148,17 @@ export const uploadPromptToIpfs = async (data: any) => {
   });
   const res = await client.put([fileObj]);
   console.log(res);
+  return res;
+};
+
+export const putJSONandGetHash = async (json: any) => {
+  const client = makeStorageClient();
+  const content = new Blob([JSON.stringify(json)], {
+    type: 'application/json',
+  });
+  const fileObj = new File([content], 'file.json', {
+    type: 'application/json',
+  });
+  const res = await client.put([fileObj]);
   return res;
 };
