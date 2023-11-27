@@ -1,5 +1,4 @@
 'use client';
-
 import Header from '@/components/header';
 import Hero from '@/components/hero';
 import WhatWeDo from '@/components/what-we-do';
@@ -16,7 +15,6 @@ const App = () => {
     <div className='bg-primaryBeige min-h-screen'>
       <div className='px-4 lg:px-8 w-full'>
         <Header />
-
       </div>
       <div className=' h-7 bg-[#EEC438]' />
       <Hero />
