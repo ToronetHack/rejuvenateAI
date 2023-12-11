@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.16;
 
-//import "@openzeppelin/contracts/utils/Checkpoints.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
@@ -30,7 +29,7 @@ error InvalidDeadline();
 
 error InvalidSubStatus();
 
-contract Community is Ownable {
+contract CommunityNetwork is Ownable {
     LinkTokenInterface public immutable i_link;
     address public immutable registrar;
     AutomationRegistryInterface public immutable i_registry;
@@ -41,6 +40,7 @@ contract Community is Ownable {
 
     Counters.Counter private _applicantIndexCounter;
     Counters.Counter private _userIndexCounter;
+    Counters.Counter private communityIdCounter;
 
     INutritionistNFT public nutritionistNFT;
 
@@ -49,6 +49,10 @@ contract Community is Ownable {
     mapping(address => uint256) public applicantToIndex;
 
     mapping(address => uint256) public userToIndex;
+
+    mapping(address => Community) public userToCommunity;
+
+    mapping(uint256 => Community) public idToCommunity;
 
     uint256 public constant userApplicationFee = 0.01 ether;
 
@@ -62,20 +66,20 @@ contract Community is Ownable {
 
     address[] public allNutritionistsAddresses;
 
-    address[] public allNutritionistsApplicants; //delete from here
+    address[] public allNutritionistsApplicants;
 
     mapping(address => bool) isMember;
 
     mapping(address => bool) isNutritionist;
 
-    mapping(address => User) users; //update users here
+    mapping(address => User) users;
 
     mapping(address => Nutritionist) public nutritionists;
 
-    mapping(address => NutritionistApplicationStatus) //change to cancelled
+    mapping(address => NutritionistApplicationStatus)
         public nutritionistApplicationStatus;
 
-    mapping(address => NutritionistApplication) public nutritionistApplications; //delete from here
+    mapping(address => NutritionistApplication) public nutritionistApplications;
 
     event NewApplication(address applicant, string dataURI);
 
@@ -96,6 +100,15 @@ contract Community is Ownable {
         Active,
         Expired
     }
+
+    struct Community {
+        uint256 id;
+        string name;
+        string communityDescription;
+        address[] members;
+    }
+
+    Community[] public allCommunities;
 
     struct NutritionistApplication {
         string dataURI;
@@ -165,6 +178,7 @@ contract Community is Ownable {
         i_link = _link;
         registrar = _registrar;
         i_registry = _registry;
+        communityIdCounter.increment();
     }
 
     /// @notice Restrict access to trusted `nutritionists`
@@ -211,7 +225,7 @@ contract Community is Ownable {
         nutritionistNFT = INutritionistNFT(_nutritionistNFT);
     }
 
-    function joinCommunity(
+    function registerUser(
         string memory _userData,
         string memory nftUri
     ) external payable {
@@ -266,6 +280,7 @@ contract Community is Ownable {
         uint256 userTokenId = userNFT.getTokenIdOfOwner(user.userAddress);
 
         userNFT.burn(user.userAddress, userTokenId);
+        //nft will be used for access control with lighthouse
     }
 
     /// @notice Function used to apply to community
@@ -342,7 +357,7 @@ contract Community is Ownable {
     /// @notice Function for community members to approve acceptance of new member to community
     function approveNutritionistRole(
         address applicant,
-        string memory nutritionistNfturi
+        string memory nutritionistNftUri
     ) external onlyOwner applicantExists(applicant) {
         // Check that sender isn't a nutritionist already
         if (isNutritionist[applicant]) {
@@ -374,7 +389,7 @@ contract Community is Ownable {
         allNutritionists.push(nutritionist);
         allNutritionistsAddresses.push(applicant);
 
-        nutritionistNFT.mint(msg.sender, nutritionistNfturi);
+        nutritionistNFT.mint(msg.sender, nutritionistNftUri);
 
         // Emit event
         emit ApplicationApproved(applicant);
@@ -411,11 +426,9 @@ contract Community is Ownable {
         nutritionistApplicationStatus[applicant] = applicationStatus;
     }
 
-    function renewSubscription()
-        external
-        onlyMembers
-        deadlinePassed(msg.sender)
-    {
+    function renewSubscription(
+        string memory nftUri
+    ) external onlyMembers deadlinePassed(msg.sender) {
         User memory user = users[msg.sender];
         if (user.subStatus != UserSubscriptionStatus.Expired) {
             revert InvalidSubStatus();
@@ -424,6 +437,7 @@ contract Community is Ownable {
         //isMember[msg.sender] = true;
         users[msg.sender] = user;
 
+        userNFT.mint(msg.sender, nftUri);
     }
 
     function getAllMembers() external view returns (User[] memory _users) {
@@ -451,6 +465,10 @@ contract Community is Ownable {
         _nutritionist.nutritionistMealplans.push(mealPlan);
     }
 
+    function getAllMealPlans() public view returns (MealPlans[] memory) {
+        return allMealPlans;
+    }
+
     function createFitnessPlan(
         string memory _fitnessName,
         string memory fitnessDesc
@@ -462,6 +480,10 @@ contract Community is Ownable {
             msg.sender
         );
         _nutritionist.fitnessPlans.push(fitnessPlan);
+    }
+
+    function getAllFitnessPlans() public view returns (FitnessPlans[] memory) {
+        return allFitnessPlans;
     }
 
     function createConsultation(
@@ -489,6 +511,39 @@ contract Community is Ownable {
         );
         _nutritionist.nutritionistArticles.push(article);
         allArticles.push(article);
+    }
+
+    function getAllArticles() public view returns (Articles[] memory) {
+        return allArticles;
+    }
+
+    function createCommunity(
+        string memory name,
+        string memory communityDesc,
+        address[] memory _members
+    ) public {
+        uint256 index = communityIdCounter.current();
+        Community memory _community = Community(
+            index,
+            name,
+            communityDesc,
+            _members
+        );
+        idToCommunity[index] = _community;
+        allCommunities.push(_community);
+        for (uint16 i; i < _members.length; i++) {
+            userToCommunity[_members[i]] = _community;
+        }
+        communityIdCounter.increment();
+    }
+
+    function joinCommunity(uint256 _communityId) public {
+        Community memory _community = idToCommunity[_communityId];
+        userToCommunity[msg.sender] = _community;
+    }
+
+    function getAllCommunties() public view returns (Community[] memory) {
+        return allCommunities;
     }
 
     function registerAndPredictID(
@@ -571,6 +626,5 @@ contract Community is Ownable {
                 revokeUser(userAddress);
             }
         }
-        // We don't use the performData in this example. The performData is generated by the Automation Node's call to your checkUpkeep function
     }
 }

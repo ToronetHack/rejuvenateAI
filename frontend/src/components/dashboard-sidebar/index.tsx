@@ -3,11 +3,23 @@ import Icon from '../Icon';
 import { Link } from '@chakra-ui/next-js';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { useAppContext } from '@/context/state';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 // import { } from 'material-symbols'
 export default function DashboardSideBar(props: {
   entryPath?: string;
   links: Array<{ title: string; url: string; icon: string }>;
 }) {
+  const { user } = useAppContext();
+  const router = useRouter();
+  // useEffect(() => {
+  //   // check if user is logged in
+  //   if (!user || !Object.keys(user).length) {
+  //     // Redirect the user to the home page
+  //     router.push('/');
+  //   }
+  // }, [user]);
   const pathname = usePathname();
   const parts = pathname.split('/');
   const lastPart = parts[parts.length - 1];
@@ -33,16 +45,16 @@ export default function DashboardSideBar(props: {
           textDecor={'none!important'}
           href={buildLink(props?.entryPath as string, link?.url)}
           alignItems={'center'}
-          className='flex gap-[40px]'
+          className='flex gap-[24px]'
         >
-          <Icon name={link?.icon} />
+          <Icon name={link?.icon} size={24} />
           <span>{link?.title}</span>
         </Link>
       </ListItem>
     );
   });
   return (
-    <Box className='h-full bg-primaryGray w-[300px] sticky top-0 ' pt={2}>
+    <Box className='h-full bg-primaryGray min-w-[250px] sticky top-0 ' pt={2}>
       <Link href='/'>
         <Image
           alt=''

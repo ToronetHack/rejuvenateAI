@@ -34,6 +34,7 @@ require('dotenv').config()
 import 'hardhat-gas-reporter';
 import 'solidity-coverage';
 import "@nomiclabs/hardhat-etherscan";
+//import "@nomicfoundation/hardhat-verify";
 
 //import "@nomiclabs/hardhat-ethers";
 
@@ -43,7 +44,7 @@ const config: HardhatUserConfig = {
   // solidity: "0.8.0",
   paths: { tests: "tests" },
   solidity: {
-    version: '0.8.17',
+    version: '0.8.16',
     settings: {
       evmVersion: process.env.EVM_VERSION || 'london',
       optimizer: {
@@ -99,7 +100,17 @@ const config: HardhatUserConfig = {
       url: "https://testnet.aurora.dev",
       chainId: 1313161555,
       accounts: [`${process.env.PRIVATE_KEY}`],
-    }
+    },
+    toronet: {
+      url: "https://testnet.toronet.org/rpc",
+      chainId: 54321,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+    snowtrace: {
+      url: "https://api.avax-test.network/ext/bc/C/rpc",
+      chainId: 43113,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
   },
   typechain: {
     target: "ethers-v5"
@@ -110,7 +121,18 @@ const config: HardhatUserConfig = {
       polygonMumbai: "7RQGFQS84Q5FNNF84YQ61T3MQDJ5Y1EB1B" ?? "",
       goerli: "1T7UC6DGWNA36AVHC4IGIRRE1MTGCSKE74" ?? "",
       arbitrumGoerli: "BWEYRFH5RWRPMMDNAG5WVMQGGEWRS754R6" ?? "",
+      snowtrace: "snowtrace"
     },
+    customChains: [
+      {
+        network: "snowtrace",
+        chainId: 43114,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan",
+          browserURL: "https://avalanche.routescan.io"
+        }
+      }
+    ] 
   },
 
 };
