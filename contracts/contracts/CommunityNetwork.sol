@@ -5,9 +5,6 @@ pragma solidity 0.8.16;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-import {AutomationRegistryInterface, State, Config} from "@chainlink/contracts/src/v0.8/automation/interfaces/v1_2/AutomationRegistryInterface1_2.sol";
-import {LinkTokenInterface} from "@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface.sol";
-import {KeeperRegistrarInterface} from "./interfaces/KeeperRegistrarInterface.sol";
 import {IUserNFT} from "./interfaces/IUserNFT.sol";
 import {INutritionistNFT} from "./interfaces/INutritionistNFT.sol";
 
@@ -30,11 +27,6 @@ error InvalidDeadline();
 error InvalidSubStatus();
 
 contract CommunityNetwork is Ownable {
-    LinkTokenInterface public immutable i_link;
-    address public immutable registrar;
-    AutomationRegistryInterface public immutable i_registry;
-    bytes4 registerSig = KeeperRegistrarInterface.register.selector;
-    //mapping(uint256 => uint256) public counterToUpkeepID;
 
     using Counters for Counters.Counter;
 
@@ -169,15 +161,9 @@ contract CommunityNetwork is Ownable {
     Articles[] public allArticles;
 
     constructor(
-        address _treasury,
-        LinkTokenInterface _link,
-        address _registrar,
-        AutomationRegistryInterface _registry
+        address _treasury
     ) {
         treasury = _treasury;
-        i_link = _link;
-        registrar = _registrar;
-        i_registry = _registry;
         communityIdCounter.increment();
     }
 
@@ -544,87 +530,5 @@ contract CommunityNetwork is Ownable {
 
     function getAllCommunties() public view returns (Community[] memory) {
         return allCommunities;
-    }
-
-    function registerAndPredictID(
-        string memory name, //upkeep name
-        bytes calldata encryptedEmail, // '0x'
-        address upkeepContract, //address(this)
-        uint32 gasLimit, //500000
-        address adminAddress, //address(msg.sender)
-        bytes calldata checkData, //0x - ABI-encoded, it is fixed and specified at Upkeep registration and used in every checkUpkeep. Can be empty (0x)
-        uint96 amount, //5 link - 5000000000000000000 wei
-        uint8 source //0
-    ) public {
-        (State memory state, , ) = i_registry.getState();
-        uint256 oldNonce = state.nonce; //number representing current upkeep
-        bytes memory payload = abi.encode(
-            name,
-            encryptedEmail,
-            upkeepContract,
-            gasLimit,
-            adminAddress,
-            checkData,
-            amount,
-            source,
-            address(this)
-        );
-        i_link.transferAndCall(
-            registrar,
-            amount,
-            bytes.concat(registerSig, payload)
-        );
-        (state, , ) = i_registry.getState();
-        uint256 newNonce = state.nonce;
-        if (newNonce == oldNonce + 1) {
-            uint256 upkeepID = uint256(
-                keccak256(
-                    abi.encodePacked(
-                        blockhash(block.number - 1),
-                        address(i_registry),
-                        uint32(oldNonce)
-                    )
-                )
-            );
-            // DEV - Use the upkeepID however you see fit
-            //counterToUpkeepID[counterID] = upkeepID;
-        } else {
-            revert("auto-approve disabled");
-        }
-    }
-
-    function checkUpkeep(
-        bytes calldata /* checkData */
-    ) external view returns (bool upkeepNeeded, bytes memory performData) {
-        //decode check data if you using it
-        //if interval has passed then return true
-
-        bool status;
-        User[] memory newUserArr = new User[](allUsers.length);
-        for (uint16 i = 0; i < allUsers.length; i++) {
-            User memory user = allUsers[i];
-            if (block.timestamp > user.subDeadline) {
-                // user.subStatus = UserSubscriptionStatus.Expired;
-                // user.subDeadline = 0;
-                newUserArr[i] = user;
-                status = true;
-            }
-        }
-        //upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
-        upkeepNeeded = status;
-        performData = abi.encode(newUserArr);
-        //pass checkData through to performData
-    }
-
-    function performUpkeep(bytes calldata performData) external {
-        //We highly recommend revalidating the upkeep in the performUpkeep function
-        User[] memory usersArr = abi.decode(performData, (User[]));
-        for (uint16 i = 0; i < usersArr.length; i++) {
-            User memory user = usersArr[i];
-            address userAddress = user.userAddress;
-            if (block.timestamp > user.subDeadline) {
-                revokeUser(userAddress);
-            }
-        }
     }
 }
