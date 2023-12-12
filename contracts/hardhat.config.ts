@@ -111,6 +111,11 @@ const config: HardhatUserConfig = {
       chainId: 43113,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    xrpEvm: {
+      url: "https://rpc-evm-sidechain.xrpl.org",
+      chainId: 1440002,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
   },
   typechain: {
     target: "ethers-v5"

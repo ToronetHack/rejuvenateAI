@@ -1,11 +1,11 @@
-# RejuvenateAI x ChainLink hack 
+# RejuvenateAI x New Horizon hack 
 
-Live Demo - [Youtube video](https://youtu.be/bCPzqrTw5Mc) <br />
-Live Link - [RejuvenateAI dapp](https://rejuvenate-chainlink-hack.vercel.app/) <br />
+Live Demo - [Youtube video](https://youtu.be/ItiJEXY74lE) <br />
+Live Link - [RejuvenateAI dapp](https://rejuvenate-ai.vercel.app/) <br />
 
 ## ✨ Description
 
-[RejuvenateAI](https://rejuvenate-chainlink-hack.vercel.app/) is the first community blockchain based project powered by community built for community to promote healthy living and achieve  healthy locations where people live up to a 100 years all around the world. We are trying to make sure people live healthy by incorporating healthy habits into their lifestyle and trying to make sure they get the most out of the human experience by discovering their purpose if they haven't already and enjoying this life, all while doing it together as a community being accountable to each other.
+[RejuvenateAI](https://rejuvenate-ai.vercel.app/) is the first community blockchain based project powered by community built for community to promote healthy living and achieve  healthy locations where people live up to a 100 years all around the world. We are trying to make sure people live healthy by incorporating healthy habits into their lifestyle and trying to make sure they get the most out of the human experience by discovering their purpose if they haven't already and enjoying this life, all while doing it together as a community being accountable to each other.
 
 ## Inspiration
 
@@ -26,7 +26,7 @@ Our features empower personal healthy living habits by:
 Here's a breakdown of how it was built:
 
 
-1. Users can sign up with the ```register``` function, which they will pay the subscription fee and then get onboarded into our platform to enjoy our services
+1. Users can sign up with the ```registerUser``` function, which they will pay the subscription fee and then get onboarded into our platform to enjoy our services
 
 2. Nutritionists can sign up with the ```applyForNutritionistRole``` function, which they will pass their credentials into and have their application status set to pending.
 
@@ -34,23 +34,21 @@ Here's a breakdown of how it was built:
 
 4. Now these nutritionists can now create meal plans by calling ``createMealPlans`` which will create meal plans for users to access.
 
-5. When a user's subscription expires, their subscription status automatically expires and their access to our platform gets revoked and their user NFT gets burned automatically, this functionality is enabled by chainlink automation which calls the ``revokeUser`` function when their deadline elapses, they still remain members of our platform just that they can't access our services until they renew their subscription and they can now mint another user NFT
-
-6. Users can join communities and chat in these communities, the chat feature is powered by push protocol, there are also ongoing challenges and events going on in communities.
+5. Users can join communities and chat in these communities, the chat feature is powered by push protocol, there are also ongoing challenges and events going on in communities.
 
 
 ## Where we deployed to/contract details
 
-We created and deployed our smart contracts on the Avalanche fuji testnet chain. 
+We created and deployed our smart contracts on the XRP EVM Sidechain testnet chain. 
 
-### Avalanche Testnet
+### XRP EVM Sidechain Testnet
 
-1. CommunityNetwork contract 0x3A3bc7C19bE0381294d8E7Bd311C123b76b33982 - [View source code](https://github.com/degencodebeast/RejuvenateAI-chainlink/blob/main/smart-contracts/contracts/CommunityNetwork.sol) | [View on Avalanche](https://testnet.snowtrace.io/address/0x3A3bc7C19bE0381294d8E7Bd311C123b76b33982)
+1. CommunityNetwork contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 - [View source code](https://github.com/newhorizonhack/rejuvenateAI/blob/main/contracts/contracts/CommunityNetwork.sol) | [View on XRP EVM Sidechain](https://evm-sidechain.xrpl.org/address/0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512)
 
-2. Treasury contract 0xdf2f1C4d00dF9b3b4c243d064D08F4B3FB6ede3E - [View source code](https://github.com/degencodebeast/RejuvenateAI-chainlink/blob/main/smart-contracts/contracts/Treasury.sol) | [View on Avalanche](https://testnet.snowtrace.io/address/0xdf2f1C4d00dF9b3b4c243d064D08F4B3FB6ede3E)
+2. Treasury contract 0x5FbDB2315678afecb367f032d93F642f64180aa3 - [View source code](https://github.com/newhorizonhack/rejuvenateAI/blob/main/contracts/contracts/Treasury.sol) | [View on XRP EVM Sidechain](https://evm-sidechain.xrpl.org/address/0x5FbDB2315678afecb367f032d93F642f64180aa3)
 
-3. User NFT contract 0x8E4508Dc5f0E17767C7c5b364cD4ee4f33e6C2e2 - [View source code](https://github.com/degencodebeast/RejuvenateAI-chainlink/blob/main/smart-contracts/contracts/UserNFT.sol) | [View on Avalanche](https://testnet.snowtrace.io/address/0x8E4508Dc5f0E17767C7c5b364cD4ee4f33e6C2e2)
+3. User NFT contract 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0 - [View source code](https://github.com/newhorizonhack/rejuvenateAI/blob/main/contracts/contracts/UserNFT.sol) | [View on XRP EVM Sidechain](https://evm-sidechain.xrpl.org/address/0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0)
 
-4. Nutritionist NFT contract 0xE3B57b2d4b7CdF04024CE1C26488C6A4Ea561df8 - [View source code](https://github.com/degencodebeast/RejuvenateAI-chainlink/blob/main/smart-contracts/contracts/NutritionistNFT.sol) | [View on Avalanche](https://testnet.snowtrace.io/address/0xE3B57b2d4b7CdF04024CE1C26488C6A4Ea561df8)
+4. Nutritionist NFT contract 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9 - [View source code](https://github.com/newhorizonhack/rejuvenateAI/blob/main/contracts/contracts/NutritionistNFT.sol) | [View on XRP EVM Sidechain](https://evm-sidechain.xrpl.org/address/0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9)
 
 

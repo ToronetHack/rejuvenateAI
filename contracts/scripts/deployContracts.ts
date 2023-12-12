@@ -8,13 +8,11 @@ import { NutritionistNFT__factory, UserNFT__factory, Treasury__factory, Communit
 
 const treasuryAddr = ""
 
-const registryAddr = "0x819B58A646CDd8289275A87653a2aA4902b14fe6"
-const registrarAddr = "0xD23D3D1b81711D75E1012211f1b65Cc7dBB474e2"
-const linkTokenAddr = "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846"
+
 const privateKey = process.env.PRIVATE_KEY as string;
 const wallet = new Wallet(privateKey);
 
-const avalancheRpc = "https://api.avax-test.network/ext/bc/C/rpc"
+const XrpEVMRpc = "https://rpc-evm-sidechain.xrpl.org"
 
 
 // const communityContract = "0x3a65168B746766066288B83417329a7F901b5569"
@@ -26,7 +24,7 @@ async function main() {
     //await deployCommunityContracts();
   
     //await setupNFTs();
-    await joinCommunity("0x3A3bc7C19bE0381294d8E7Bd311C123b76b33982");
+    await joinCommunity("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
 
     // const chainID = network.config.chainId;
     // if (chainID != 31337) {
@@ -70,7 +68,7 @@ async function deployNutritionistNFT(_communityAddr: any) {
 
 async function joinCommunity(_communityAddr: any) {
     
-    const provider = getDefaultProvider(avalancheRpc);
+    const provider = getDefaultProvider(XrpEVMRpc);
     const connectedWallet = wallet.connect(provider);
 
     const communityFactory = new CommunityNetwork__factory(connectedWallet);
@@ -78,26 +76,26 @@ async function joinCommunity(_communityAddr: any) {
 
     console.log("joining community network...")
     const amount = ethers.utils.parseEther("0.01");
-    //const tx = await community.registerUser("hello", "nft", {gasLimit: 6000000, value: amount})
-    const tx = await community.nutritionistNFT()
-    //await tx.wait();
-    console.log(tx)
+    const tx = await community.registerUser("hello", "just testing", {gasLimit: 6000000, value: amount})
+    //const tx = await community.getAllCommunties()
+    await tx.wait();
+    //console.log(tx.toString())
     console.log("community network successfully joined")
 }
 
 async function setupNFTs() {
-    let userNFTAddr = "0x8E4508Dc5f0E17767C7c5b364cD4ee4f33e6C2e2"
-    let nutritionistNFTAddr = "0xE3B57b2d4b7CdF04024CE1C26488C6A4Ea561df8"
-    let communityAddr = "0x3A3bc7C19bE0381294d8E7Bd311C123b76b33982"
+    let userNFTAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    let nutritionistNFTAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    let communityAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
-    const provider = getDefaultProvider(avalancheRpc);
+    const provider = getDefaultProvider(XrpEVMRpc);
     const connectedWallet = wallet.connect(provider);
 
     const communityFactory = new CommunityNetwork__factory(connectedWallet);
     const community = communityFactory.attach(communityAddr);
 
     try {
-        console.log("Setting up NFTs for Avalanche")
+        console.log("Setting up NFTs for XrpEVM")
         const tx = await community.setNFTs(userNFTAddr, nutritionistNFTAddr);
         await tx.wait();
         console.log("NFTs setup successful")
@@ -112,50 +110,50 @@ async function setupNFTs() {
 
 
 async function deployCommunityContracts() {
-    console.log("Deploying Contracts for Avalanche....");
+    console.log("Deploying Contracts for XrpEVM....");
     let treasuryAddr;
     let communityAddr;
     try {
-        console.log("Deploying treasury for Avalanche");
+        console.log("Deploying treasury for XrpEVM");
         treasuryAddr = await deployTreasury();
 
         const CommunityFactory = await ethers.getContractFactory("CommunityNetwork"/*, wallet*/);
 
-        console.log("Deploying Community contract for Avalanche");
-        const community = await CommunityFactory.deploy(treasuryAddr, linkTokenAddr, registrarAddr, registryAddr);
+        console.log("Deploying Community contract for XrpEVM");
+        const community = await CommunityFactory.deploy(treasuryAddr);
         await community.deployed();
         communityAddr = community.address;
-        console.log("---- Community Contract for Avalanche was deployed to Avalanche testnet at this address: ---- ", community.address);
+        console.log("---- Community Contract for XrpEVM was deployed to XrpEVM testnet at this address: ---- ", community.address);
     }
     catch (error) {
-        console.error("Error deploying Community for Avalanche:", error);
+        console.error("Error deploying Community for XrpEVM:", error);
         throw error;
     }
 
-    console.log("Deploying UserNFT for Avalanche....");
+    console.log("Deploying UserNFT for XrpEVM....");
     let userNFT;
     try {
         userNFT = await deployUserNFT(communityAddr);
     }
     catch (error) {
-        console.error("Error User NFT for Avalanche:", error);
+        console.error("Error User NFT for XrpEVM:", error);
         throw error;
     }
 
-    console.log("Deploying NutritionistNFT for Avalanche....");
+    console.log("Deploying NutritionistNFT for XrpEVM....");
     let nutritionistNFT;
     try {
         nutritionistNFT = await deployNutritionistNFT(communityAddr);
     }
     catch (error) {
-        console.error("Error Nutritionist NFT for Avalanche:", error);
+        console.error("Error Nutritionist NFT for XrpEVM:", error);
         throw error;
     }
 }
 
 // async function verifyContract() {
 
-//     console.log(`Verifying nutritionistNFT contract for Avalanche...`);
+//     console.log(`Verifying nutritionistNFT contract for XrpEVM...`);
 
 //     try {
 //         await run("verify:verify", {
