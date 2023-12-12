@@ -5,17 +5,25 @@ import Providers from './providers';
 import Head from 'next/head';
 import { Poppins } from 'next/font/google';
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
-
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { arbitrumGoerli, avalancheFuji } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { useEffect, useState } from "react";
-
+import { xrpEvm } from '@/utils/constants';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [avalancheFuji],
-  [publicProvider()]
+  [xrpEvm],
+  [
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: `https://rpc-evm-sidechain.xrpl.org
+        `,
+      }),
+    }),
+    //publicProvider()
+  ]
 );
 
 const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID as string;
